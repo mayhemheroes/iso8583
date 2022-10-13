@@ -5,7 +5,7 @@ project: iso8583
 target: iso8583-reader-fuzz
 
 # Base image to run the binary in.
-image: ghcr.io/lotdeef/iso8583:latest
+# image: ghcr.io/lotdeef/iso8583:latest
 
 # List of commands used to test the target
 cmds:
