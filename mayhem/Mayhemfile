@@ -1,0 +1,4 @@
+project: iso8583
+target: iso8583-reader-fuzz
+cmds:
+  - cmd: ./reader-fuzz.libfuzzer
