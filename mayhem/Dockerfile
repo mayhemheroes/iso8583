@@ -1,13 +1,9 @@
-FROM fuzzers/go-fuzz:1.2.0 as builder
+FROM golang:1.26 AS builder
 
-ARG project='iso8583'
-ARG fuzzTargetPath='test/fuzz-reader'
-ARG fuzzTarget='reader-fuzz'
+WORKDIR /src
+COPY . .
+RUN GOTOOLCHAIN=auto go test -c -fuzz=FuzzReader ./test/fuzz-reader/ -o /reader-fuzz
 
-ADD . ${project}
-WORKDIR ${project}
-RUN GO_ENABLED=0 go-fuzz-build -libfuzzer -o /${fuzzTarget}.a ./${fuzzTargetPath}
-RUN clang -fsanitize=fuzzer /${fuzzTarget}.a -o /${fuzzTarget}.libfuzzer
-
-FROM ubuntu:20.04
-COPY --from=builder /reader-fuzz.libfuzzer /
+FROM ubuntu:22.04
+COPY --from=builder /reader-fuzz /
+ENTRYPOINT ["/reader-fuzz", "-test.fuzz=FuzzReader"]
